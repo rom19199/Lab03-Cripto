@@ -80,6 +80,17 @@ def WichmanHill(a,b):
         
     return (l)
 
+def lfsr(semillas, taps, k):
+    res = semillas
+    sr, xor = semillas, 0
+    while len(res) < k:
+        for x in taps:
+            xor += int(sr[x-1])
+        xor = 0 if xor %2 == 0.0 else 1
+        sr, xor = str(xor) + sr[:-1], 0
+        res += sr
+    return res
+
 #cadena de la imagen original y las cadena aleatoria
 cad1 = img2bits(I)
 cad2 = WichmanHill(len(cad1))
@@ -94,6 +105,3 @@ plt.imshow(c1, cmap='gray')
 plt.subplot(1,2,2)
 plt.imshow(c2, cmap='gray')
 plt.show()
-
-
-                 
