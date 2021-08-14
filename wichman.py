@@ -49,7 +49,20 @@ def bits2img(x, shape):
     I = I.reshape(m,n)
     return I
 
+def compare():
+    imagen = img = io.imread('manzana.png',as_gray=True)
+    J = Image.fromarray(imgen)
+    J = J.resize((J.size[0]//2, J.size[1]//2), Image.LANCZOS)
+    I = np.array(J) * 255
+    I = I.astype(int)
+    
+    plt.figure()
+    plt.imshow(I, cmap='gray')
+    plt.show()
 
+
+# Wichman-Hill generator
+#Implementar un generador pseudo-aleatorio de Wichman-Hill
 def WichmanHill(a,b):
     seed1 = randint(1, 30000)
     seed2 = randint(1, 30000)
@@ -66,4 +79,6 @@ def WichmanHill(a,b):
         l += str(round(resp))
         
     return (l)
+
+
                  
