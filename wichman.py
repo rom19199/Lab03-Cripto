@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import re
-from skimage import io,data   # estas librerías solo se usan para
+from skimage.data import manzana  # estas librerías solo se usan para
 from PIL import Image               # llamar al ejemplo de cameraman.png
 from random import randint
 import random
@@ -79,6 +79,21 @@ def WichmanHill(a,b):
         l += str(round(resp))
         
     return (l)
+
+#cadena de la imagen original y las cadena aleatoria
+cad1 = img2bits(I)
+cad2 = WichmanHill(len(cad1))
+cad3_xor = xor(cad1, cad2)
+
+c1 = bits2img(cad2, I.shape)
+c2 = bits2img(cad3_xor, I.shape)
+
+plt.figure(figsize=(15,8))
+plt.subplot(1,2,1)
+plt.imshow(c1, cmap='gray')
+plt.subplot(1,2,2)
+plt.imshow(c2, cmap='gray')
+plt.show()
 
 
                  
