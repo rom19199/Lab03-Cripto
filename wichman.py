@@ -1,4 +1,8 @@
-
+import numpy as np
+import matplotlib.pyplot as plt
+import re
+from skimage import io,data   # estas librerías solo se usan para
+from PIL import Image               # llamar al ejemplo de cameraman.png
 from random import randint
 import random
 
