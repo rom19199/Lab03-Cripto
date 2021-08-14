@@ -1,10 +1,11 @@
+import random
+import struct
+import math
 import numpy as np
 import matplotlib.pyplot as plt
 import re
-from skimage.data import manzana  # estas librerías solo se usan para
-from PIL import Image               # llamar al ejemplo de cameraman.png
-from random import randint
-import random
+from skimage.data import camera
+from PIL import Image
 
 
 def xor(a, b):
@@ -33,6 +34,12 @@ def img2bits(I):
             s = s + '{0:08b}'.format(I[i,j])
     return s
 
+def funcion(f, n):
+    return math.floor(f * 10 ** n) / 10 ** n
+def Bits(num):
+    return ''.join('{:0>8b}'.format(c) for c in struct.pack('!f', num))
+
+
 
 def bits2img(x, shape):
     ''' Convierte una cadena de bits a una imagen en escala de grises.
@@ -48,52 +55,41 @@ def bits2img(x, shape):
         I[i] = int(bts[i], 2)
     I = I.reshape(m,n)
     return I
-
-def compare():
-    imagen = img = io.imread('manzana.png',as_gray=True)
-    J = Image.fromarray(imgen)
-    J = J.resize((J.size[0]//2, J.size[1]//2), Image.LANCZOS)
-    I = np.array(J) * 255
-    I = I.astype(int)
     
-    plt.figure()
-    plt.imshow(I, cmap='gray')
-    plt.show()
-
+#se importa la imagen
+I = camera()
+J = Image.fromarray(I)
+J = J.resize((J.size[0]//2, J.size[1]//2), Image.LANCZOS)
+I = np.array(J)
+I.shape
+k = 1
 
 # Wichman-Hill generator
 #Implementar un generador pseudo-aleatorio de Wichman-Hill
 def WichmanHill(a,b):
-    seed1 = randint(1, 30000)
-    seed2 = randint(1, 30000)
-    seed3 = randint(1, 30000)
+    seed1 = a[0]
+    seed2 = a[1]
+    seed3 = a[2]
+    resp = []
+    lista = []
     
-    l = ''
-    
-    for i in range(b):
+    for i in range (int(b)):
         seed1 = (171 * seed1) % 30269
         seed2 = (172 * seed2) % 30307
         seed3 = (170 * seed3) % 30323
-        
-        resp = ((float(seed1)/30269 + float(seed2)/30307 + float(seed3)/30323) % 1)
-        l += str(round(resp))
-        
-    return (l)
+        resp.append((float(seed1)/30269.0 + float(seed2)/30307.0 + float(seed3)/30323.0) % 1.0)
+    for x in resp:
+        binario = Bits(funcion(x,10))
+        lista.append(binario)
+    z = ''.join(map(str, lista))
+    print(z[0:int(b)])
+    return(z[0:int(b)])    
 
-def lfsr(semillas, taps, k):
-    res = semillas
-    sr, xor = semillas, 0
-    while len(res) < k:
-        for x in taps:
-            xor += int(sr[x-1])
-        xor = 0 if xor %2 == 0.0 else 1
-        sr, xor = str(xor) + sr[:-1], 0
-        res += sr
-    return res
+a = [random.randint(1, 30000),random.randint(1, 30000),random.randint(1, 30000)]
 
 #cadena de la imagen original y las cadena aleatoria
 cad1 = img2bits(I)
-cad2 = WichmanHill(len(cad1))
+cad2 = WichmanHill(a, len(cad1))
 cad3_xor = xor(cad1, cad2)
 
 c1 = bits2img(cad2, I.shape)
